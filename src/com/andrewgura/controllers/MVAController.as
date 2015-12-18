@@ -4,12 +4,19 @@ import com.andrewgura.vo.MVAProjectVO;
 
 import flash.events.Event;
 
+import mx.events.CollectionEvent;
+
 public class MVAController {
 
     private var project:MVAProjectVO;
 
     public function MVAController(project:MVAProjectVO) {
         this.project = project;
+        this.project.entries.addEventListener(CollectionEvent.COLLECTION_CHANGE, onEntriesChange);
+    }
+
+    public function onEntriesChange(event:CollectionEvent):void {
+        project.isChangesSaved = false;
     }
 
     public function addLanguage(lang:LangVO):void {
@@ -24,7 +31,7 @@ public class MVAController {
             item[lang.code] = '';
         }
         project.dispatchEvent(new Event('langsChange'));
-        project.dispatchEvent(new Event('dataChange'));
+        project.isChangesSaved = false;
     }
 
     public function removeLanguage(lang:LangVO):void {
@@ -34,7 +41,7 @@ public class MVAController {
                 delete item[lang.code];
             }
             project.dispatchEvent(new Event('langsChange'));
-            project.dispatchEvent(new Event('dataChange'));
+            project.isChangesSaved = false;
         }
     }
 
@@ -53,7 +60,7 @@ public class MVAController {
                 }
             }
             project.dispatchEvent(new Event('langsChange'));
-            project.dispatchEvent(new Event('dataChange'));
+            project.isChangesSaved = false;
             return;
         }
     }
@@ -67,6 +74,7 @@ public class MVAController {
                     object[lang.code] = '';
                 }
                 project.entries.addItem(object);
+                project.isChangesSaved = false;
                 return;
             }
         }

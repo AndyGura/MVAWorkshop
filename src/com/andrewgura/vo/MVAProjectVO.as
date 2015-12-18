@@ -1,7 +1,6 @@
 package com.andrewgura.vo {
 
 import flash.utils.ByteArray;
-import flash.utils.ByteArray;
 
 import mx.collections.ArrayCollection;
 
@@ -38,7 +37,11 @@ public class MVAProjectVO extends ProjectVO {
     override public function deserialize(name:String, fileName:String, data:ByteArray):void {
         super.deserialize(name, fileName, data);
         var simpleData:* = data.readObject();
-        this.langs = new ArrayCollection(simpleData.langs);
+        var langs:ArrayCollection = new ArrayCollection(simpleData.langs);
+        this.langs = new ArrayCollection();
+        for each (var l:* in langs) {
+            this.langs.addItem(new LangVO(l.code, l.name));
+        }
         this.entries = new ArrayCollection(simpleData.entries);
     }
 }
