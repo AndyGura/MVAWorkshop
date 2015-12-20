@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<components:SettingsPanel xmlns:fx="http://ns.adobe.com/mxml/2009"
+                          xmlns:s="library://ns.adobe.com/flex/spark" xmlns:components="com.andrewgura.ui.components.*">
+
+    <fx:Script><![CDATA[
+        import com.andrewgura.vo.MVAProjectVO;
+        import com.andrewgura.vo.ProjectVO;
+
+        override public function set project(value:ProjectVO):void {
+            super.project = value;
+            outputProjectPath = MVAProjectVO(value).outputProjectPath;
+        }
+
+        [Bindable]
+        public var outputProjectPath:String;
+
+        override public function getChangesObject():* {
+            return {a: "test", b: "testa", outputProjectPath: outputProjectPath};
+        }
+
+        ]]>
+    </fx:Script>
+
+    <s:TileGroup requestedColumnCount="2" verticalAlign="middle">
+        <s:Label text="Output project directory:"/>
+        <s:TextInput text="@{outputProjectPath}"/>
+        <s:Label text="Option2:"/>
+        <s:TextInput text="option value 2"/>
+        <s:Label text="Option 3:"/>
+        <s:TextInput text="option value 3"/>
+    </s:TileGroup>
+
+</components:SettingsPanel>

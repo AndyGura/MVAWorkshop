@@ -12,6 +12,9 @@ public class MVAProjectVO extends ProjectVO {
     public var langs:ArrayCollection = new ArrayCollection();
     public var entries:ArrayCollection = new ArrayCollection([{string: ''}]);
 
+    public var outputProjectPath:String = '';
+
+
     [Bindable(event="langsChange")]
     public function get dataGridColumnsProvider():ArrayCollection {
         var output:Array = [];
