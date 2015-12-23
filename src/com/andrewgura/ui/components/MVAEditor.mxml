@@ -58,13 +58,15 @@
             <s:Spacer height="50"/>
 
             <components:LanguageEditor width="100%"
+                                       visible="{languagesList.selectedItem}"
+                                       includeInLayout="{languagesList.selectedItem}"
                                        lang="{languagesList.selectedItem}"
                                        saveLanguage="onChangeLanguage(event)"/>
 
         </s:VGroup>
 
         <s:DataGrid width="100%" height="100%"
-                    editable="true"
+                    editable="true" sortableColumns="false"
                     dataProvider="{MVAProjectVO(project).entries}"
                     columns="{MVAProjectVO(project).dataGridColumnsProvider}"
                     gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)">

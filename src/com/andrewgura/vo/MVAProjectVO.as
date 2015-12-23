@@ -1,5 +1,6 @@
 package com.andrewgura.vo {
 
+import flash.events.Event;
 import flash.utils.ByteArray;
 
 import mx.collections.ArrayCollection;
@@ -46,6 +47,7 @@ public class MVAProjectVO extends ProjectVO {
             this.langs.addItem(new LangVO(l.code, l.name));
         }
         this.entries = new ArrayCollection(simpleData.entries);
+        dispatchEvent(new Event("langsChange"));
     }
 }
 

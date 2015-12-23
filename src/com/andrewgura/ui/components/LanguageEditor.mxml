@@ -18,15 +18,17 @@
         ]]>
   </fx:Script>
 
-    <s:VGroup>
-        <s:Label text="Lang code:" textAlign="right"/>
-        <s:Label text="Lang name:" textAlign="right"/>
-        <s:Button label="Save" click="onSaveButtonClick(event)"/>
-    </s:VGroup>
-
-    <s:VGroup>
-        <s:TextInput id="codeTextInput" text="{lang.code}" width="100%"/>
-        <s:TextInput id="nameTextInput" text="{lang.name}" width="100%"/>
+    <s:VGroup width="100%" horizontalAlign="right">
+        <s:HGroup width="100%" verticalAlign="middle">
+            <s:Label text="Lang code:" textAlign="right" width="80"/>
+            <s:TextInput id="codeTextInput" text="{lang.code}" width="100%"/>
+        </s:HGroup>
+        <s:HGroup width="100%" verticalAlign="middle">
+            <s:Label text="Lang name:" textAlign="right" width="80"/>
+            <s:TextInput id="nameTextInput" text="{lang.name}" width="100%"/>
+        </s:HGroup>
+        <s:Button label="Save" click="onSaveButtonClick(event)"
+                  enabled="{lang &amp;&amp; (lang.name != nameTextInput.text || lang.code != codeTextInput.text)}"/>
     </s:VGroup>
 
 </s:HGroup>
