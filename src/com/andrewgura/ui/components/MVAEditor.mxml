@@ -5,6 +5,8 @@
 
     <fx:Script><![CDATA[
         import com.andrewgura.controllers.MVAController;
+        import com.andrewgura.ui.popup.AppPopups;
+        import com.andrewgura.ui.popup.PopupFactory;
         import com.andrewgura.vo.LangVO;
         import com.andrewgura.vo.MVAProjectVO;
         import com.andrewgura.vo.ProjectVO;
@@ -23,7 +25,10 @@
         }
 
         private function onDeleteLanguageButtonClick(event:MouseEvent):void {
-            controller.removeLanguage(LangVO(languagesList.selectedItem));
+            PopupFactory.instance.showPopup(AppPopups.CONFIRM_POPUP, 'Are you sure to delete language? Data will be deleted!', true, null, onOkClick);
+            function onOkClick(event:Event):void {
+                controller.removeLanguage(LangVO(languagesList.selectedItem));
+            }
         }
 
         private function onChangeLanguage(event:DataEvent):void {
@@ -50,9 +55,9 @@
                     width="100%" height="100"
                     dataProvider="{MVAProjectVO(project).langs}" labelField="name"/>
             <s:HGroup>
-                <s:Button label="Add" click="onAddLanguageButtonClick(event)" styleName="breezeButton"/>
+                <s:Button label="Add" click="onAddLanguageButtonClick(event)"/>
                 <s:Button label="Delete" click="onDeleteLanguageButtonClick(event)"
-                          enabled="{languagesList.selectedIndex>-1}" styleName="breezeButton"/>
+                          enabled="{languagesList.selectedIndex>-1}"/>
             </s:HGroup>
 
             <s:Spacer height="50"/>
