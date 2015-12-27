@@ -2,10 +2,16 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="MVAWorkshop">
     <configurations>
-      <configuration name="MVAWorkshop" target-platform="Desktop" main-class="Main" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/MVAWorkshop">
+      <configuration name="MVAWorkshop" target-platform="Desktop" main-class="Main" output-file="MVAWorkshop.swf" output-folder="$MODULE_DIR$/out/production/MVAWorkshop">
         <dependencies target-player="11.9">
           <entries>
             <entry module-name="WorkshopAPI" build-configuration-name="WorkshopAPI">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="BreezeTheme" build-configuration-name="BreezeTheme">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="d0254b73-1430-44f3-8b0e-4e97edd1bcf9">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -16,7 +22,11 @@
             <entry key="compiler.theme" value="$MODULE_DIR$/../BreezeTheme/bin/BreezeTheme.swc" />
           </map>
         </compiler-options>
-        <packaging-air-desktop package-file-name="Main" />
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="MVAWorkshop">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/assets" path-in-package="assets" />
+          </files-to-package>
+        </packaging-air-desktop>
         <packaging-android />
         <packaging-ios />
       </configuration>
@@ -32,5 +42,16 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="WorkshopAPI" level="project" />
     <orderEntry type="module" module-name="WorkshopAPI" exported="" />
+    <orderEntry type="module" module-name="BreezeTheme" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="d0254b73-1430-44f3-8b0e-4e97edd1bcf9" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/MonsterDebugger.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

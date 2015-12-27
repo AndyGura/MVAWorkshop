@@ -40,7 +40,6 @@
 
         private function dataGrid1_gridItemEditorSessionSaveHandler(event:GridItemEditorEvent):void {
             project.isChangesSaved = false;
-            controller.checkLastEmptyEntry();
         }
         ]]>
     </fx:Script>
@@ -74,8 +73,7 @@
                     editable="true" sortableColumns="false"
                     dataProvider="{MVAProjectVO(project).entries}"
                     columns="{MVAProjectVO(project).dataGridColumnsProvider}"
-                    gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)">
-        </s:DataGrid>
+                    gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)"/>
 
     </s:HGroup>
 

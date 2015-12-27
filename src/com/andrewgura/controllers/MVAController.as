@@ -65,20 +65,5 @@ public class MVAController {
         }
     }
 
-    public function checkLastEmptyEntry():void {
-        var lastItem:* = MVAProjectVO(project).entries[MVAProjectVO(project).entries.length - 1];
-        for (var k:String in lastItem) {
-            if (lastItem[k].length > 0) {
-                var object:* = {string: ''};
-                for each (var lang:LangVO in project.langs) {
-                    object[lang.code] = '';
-                }
-                project.entries.addItem(object);
-                project.isChangesSaved = false;
-                return;
-            }
-        }
-    }
-
 }
 }
