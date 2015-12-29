@@ -11,7 +11,7 @@ import spark.components.gridClasses.GridColumn;
 public class MVAProjectVO extends ProjectVO {
 
     public var langs:ArrayCollection = new ArrayCollection();
-    public var entries:ArrayCollection = new ArrayCollection([{string: ''}]);
+    public var entries:ArrayCollection = new ArrayCollection();
 
     public var outputProjectPath:String = '';
 
@@ -22,6 +22,7 @@ public class MVAProjectVO extends ProjectVO {
         var gridColumn:GridColumn = new GridColumn();
         gridColumn.dataField = 'string';
         gridColumn.headerText = 'String ID';
+        gridColumn.editable = false;
         output.push(gridColumn);
         for each (var lang:LangVO in langs) {
             gridColumn = new GridColumn();

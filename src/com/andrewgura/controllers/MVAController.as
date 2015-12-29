@@ -65,5 +65,41 @@ public class MVAController {
         }
     }
 
+    public function getEntryByID(id:String):Object {
+        for each (var entry:Object in project.entries) {
+            if (entry["string"] == id) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    public function addEntry():void {
+        var nameOfEntry:String = 'NEW_ENTRY';
+        var i:Number = 0;
+        while (getEntryByID(nameOfEntry) != null) {
+            i++;
+            nameOfEntry = 'NEW_ENTRY_' + i;
+        }
+        var entry:Object = {string: nameOfEntry};
+        for each (var lang:LangVO in project.langs) {
+            entry[lang.code] = '';
+        }
+        project.entries.addItem(entry);
+    }
+
+    public function removeEntry(id:String):void {
+        removeEntries([id]);
+    }
+
+    public function removeEntries(entries:Array):void {
+        for each (var id:String in entries) {
+            if (!getEntryByID(id)) {
+                continue;
+            }
+            project.entries.removeItem(getEntryByID(id));
+        }
+    }
+
 }
 }

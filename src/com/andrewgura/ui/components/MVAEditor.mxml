@@ -41,6 +41,21 @@
         private function dataGrid1_gridItemEditorSessionSaveHandler(event:GridItemEditorEvent):void {
             project.isChangesSaved = false;
         }
+
+        private function onAddEntryClick(event:MouseEvent):void {
+            controller.addEntry();
+        }
+        private function onDeleteEntryClick(event:MouseEvent):void {
+            PopupFactory.instance.showPopup(AppPopups.CONFIRM_POPUP, 'Are you sure to delete selected entries?', true, null, onOkClick);
+            function onOkClick(event:Event):void {
+                var entries:Array = [];
+                for each (var e:Object in dataGrid.selectedItems) {
+                    entries.push(e["string"]);
+                }
+                controller.removeEntries(entries);
+            }
+        }
+
         ]]>
     </fx:Script>
 
@@ -69,11 +84,22 @@
 
         </s:VGroup>
 
-        <s:DataGrid width="100%" height="100%"
-                    editable="true" sortableColumns="false"
-                    dataProvider="{MVAProjectVO(project).entries}"
-                    columns="{MVAProjectVO(project).dataGridColumnsProvider}"
-                    gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)"/>
+        <s:VGroup width="100%" height="100%">
+
+            <s:HGroup>
+                <s:Button label="Add" click="onAddEntryClick(event)"/>
+                <s:Button label="Delete" click="onDeleteEntryClick(event)"
+                          enabled="{dataGrid.selectedItem}"/>
+            </s:HGroup>
+            <s:DataGrid id="dataGrid"
+                        width="100%" height="100%"
+                        selectionMode="multipleRows"
+                        editable="true" sortableColumns="false"
+                        dataProvider="{MVAProjectVO(project).entries}"
+                        columns="{MVAProjectVO(project).dataGridColumnsProvider}"
+                        gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)"/>
+        </s:VGroup>
+
 
     </s:HGroup>
 
