@@ -1,8 +1,14 @@
 package com.andrewgura.controllers {
+import com.andrewgura.ui.popup.AppPopups;
+import com.andrewgura.ui.popup.PopupFactory;
 import com.andrewgura.vo.LangVO;
 import com.andrewgura.vo.MVAProjectVO;
 
 import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
+import flash.utils.ByteArray;
 
 import mx.events.CollectionEvent;
 
@@ -98,6 +104,58 @@ public class MVAController {
                 continue;
             }
             project.entries.removeItem(getEntryByID(id));
+        }
+    }
+
+    public function export():void {
+        try {
+            var outputDirectory:File = new File(MVAProjectVO(project).outputProjectPath);
+        } catch (e:Error) {
+        }
+        if (!outputDirectory || !outputDirectory.exists || !outputDirectory.isDirectory) {
+            exportError('Wrong output project directory!');
+            return;
+        }
+        var mvaDirectory:File = outputDirectory.resolvePath(project.outputMVAPath);
+        if (!mvaDirectory.exists) {
+            mvaDirectory.createDirectory();
+        }
+        var fs:FileStream = new FileStream();
+        for each (var lang:LangVO in project.langs) {
+            var mvaData:ByteArray = project.getExportedMVA(lang.code);
+            fs.open(mvaDirectory.resolvePath(lang.code+'.mva'), FileMode.WRITE);
+            fs.writeBytes(mvaData);
+            fs.close();
+        }
+        var packageDirectory:File = outputDirectory.resolvePath(project.outputClassesPackagePath);
+        if (!mvaDirectory.exists) {
+            mvaDirectory.createDirectory();
+        }
+        var pAckage:String = project.outputClassesPackagePath.replace(/\//gi, '.');
+
+        fs.open(packageDirectory.resolvePath('LocaleConst.as'), FileMode.WRITE);
+        fs.writeUTFBytes(project.getOutputLocaleConstClassText(pAckage));
+        fs.close();
+
+        fs.open(packageDirectory.resolvePath('LocaleController.as'), FileMode.WRITE);
+        fs.writeUTFBytes(project.getOutputLocaleControllerClassText(pAckage));
+        fs.close();
+
+        fs.open(packageDirectory.resolvePath('LocaleModel.as'), FileMode.WRITE);
+        fs.writeUTFBytes(project.getOutputLocaleModelClassText(pAckage));
+        fs.close();
+
+        fs.open(packageDirectory.resolvePath('LangVO.as'), FileMode.WRITE);
+        fs.writeUTFBytes(project.getOutputLangVOClassText(pAckage));
+        fs.close();
+
+        PopupFactory.instance.showPopup(AppPopups.INFO_POPUP, 'Export success!');
+    }
+
+    private function exportError(msg:String):void {
+        PopupFactory.instance.showPopup(AppPopups.ERROR_POPUP, msg, true, null, onOkClick);
+        function onOkClick(event:Event):void {
+            MainController.openProjectSettings();
         }
     }
 

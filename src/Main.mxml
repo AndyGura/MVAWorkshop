@@ -9,6 +9,7 @@
         import com.andrewgura.ui.components.MVAEditor;
         import com.andrewgura.ui.components.MVASettingsPanel;
         import com.andrewgura.ui.components.SettingsPanel;
+        import com.andrewgura.vo.FileTypeVO;
         import com.andrewgura.vo.MVAProjectVO;
 
         [Bindable]
@@ -19,8 +20,7 @@
             config.editorClass = MVAEditor;
             config.projectClass = MVAProjectVO;
             config.settingsPanelClass = MVASettingsPanel;
-            config.projectFileExtension = 'mvp';
-            config.projectFileTypeDescription = 'MVAWorkshop project file';
+            config.projectFileType = new FileTypeVO('mvp', 'MVAWorkshop project file');
         }
         ]]>
     </fx:Script>

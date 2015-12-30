@@ -9,25 +9,32 @@
         override public function set project(value:ProjectVO):void {
             super.project = value;
             outputProjectPath = MVAProjectVO(value).outputProjectPath;
+            outputMVAPath = MVAProjectVO(value).outputMVAPath;
+            outputClassesPackagePath = MVAProjectVO(value).outputClassesPackagePath;
         }
 
         [Bindable]
         public var outputProjectPath:String;
 
-        override public function getChangesObject():* {
-            return {a: "test", b: "testa", outputProjectPath: outputProjectPath};
-        }
+        [Bindable]
+        public var outputMVAPath:String;
 
+        [Bindable]
+        public var outputClassesPackagePath:String;
+
+        override public function getChangesObject():* {
+            return {outputProjectPath: outputProjectPath, outputMVAPath: outputMVAPath, outputClassesPackagePath: outputClassesPackagePath};
+        }
         ]]>
     </fx:Script>
 
     <s:TileGroup requestedColumnCount="2" verticalAlign="middle">
         <s:Label text="Output project directory:"/>
         <s:TextInput text="@{outputProjectPath}"/>
-        <s:Label text="Option2:"/>
-        <s:TextInput text="option value 2"/>
-        <s:Label text="Option 3:"/>
-        <s:TextInput text="option value 3"/>
+        <s:Label text="Path to MVA in project:"/>
+        <s:TextInput text="@{outputMVAPath}"/>
+        <s:Label text="Path to package for locale classes:"/>
+        <s:TextInput text="@{outputClassesPackagePath}"/>
     </s:TileGroup>
 
 </components:SettingsPanel>

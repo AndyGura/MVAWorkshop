@@ -45,6 +45,7 @@
         private function onAddEntryClick(event:MouseEvent):void {
             controller.addEntry();
         }
+
         private function onDeleteEntryClick(event:MouseEvent):void {
             PopupFactory.instance.showPopup(AppPopups.CONFIRM_POPUP, 'Are you sure to delete selected entries?', true, null, onOkClick);
             function onOkClick(event:Event):void {
@@ -56,6 +57,9 @@
             }
         }
 
+        private function onExportClick(event:MouseEvent):void {
+            controller.export();
+        }
         ]]>
     </fx:Script>
 
@@ -81,6 +85,10 @@
                                        includeInLayout="{languagesList.selectedItem}"
                                        lang="{languagesList.selectedItem}"
                                        saveLanguage="onChangeLanguage(event)"/>
+
+            <s:Spacer height="100%"/>
+
+            <s:Button width="100%" label="EXPORT TO PROJECT" click="onExportClick(event)"/>
 
         </s:VGroup>
 
