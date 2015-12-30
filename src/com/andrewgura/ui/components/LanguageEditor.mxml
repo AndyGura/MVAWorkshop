@@ -12,7 +12,7 @@
         [Bindable]
         public var lang:LangVO;
 
-        private function onSaveButtonClick(event:MouseEvent):void {
+        private function onSaveButtonClick():void {
             dispatchEvent(new DataEvent('saveLanguage', false, false, JSON.stringify({code: codeTextInput.text, name: nameTextInput.text})));
         }
         ]]>
@@ -21,13 +21,14 @@
     <s:VGroup width="100%" horizontalAlign="right">
         <s:HGroup width="100%" verticalAlign="middle">
             <s:Label text="Lang code:" textAlign="right" width="80"/>
-            <s:TextInput id="codeTextInput" text="{lang.code}" width="100%"/>
+            <s:TextInput id="codeTextInput" text="{lang.code}" width="100%" enter="{nameTextInput.setFocus()}"/>
         </s:HGroup>
         <s:HGroup width="100%" verticalAlign="middle">
             <s:Label text="Lang name:" textAlign="right" width="80"/>
-            <s:TextInput id="nameTextInput" text="{lang.name}" width="100%"/>
+            <s:TextInput id="nameTextInput" text="{lang.name}" width="100%" enter="{onSaveButtonClick();}"/>
         </s:HGroup>
-        <s:Button label="Save" click="onSaveButtonClick(event)"
+        <s:Button id="saveButton"
+                  label="Save" click="onSaveButtonClick()"
                   enabled="{lang &amp;&amp; (lang.name != nameTextInput.text || lang.code != codeTextInput.text)}"/>
     </s:VGroup>
 

@@ -22,6 +22,7 @@
 
         private function onAddLanguageButtonClick(event:MouseEvent):void {
             controller.addLanguage(new LangVO('en_US', 'US English'));
+            languagesList.selectedIndex = MVAProjectVO(project).langs.length - 1;
         }
 
         private function onDeleteLanguageButtonClick(event:MouseEvent):void {
@@ -36,6 +37,7 @@
                 return;
             }
             controller.changeLanguage(languagesList.selectedItem.code, JSON.parse(event.data));
+            languagesList.selectedIndex = -1;
         }
 
         private function dataGrid1_gridItemEditorSessionSaveHandler(event:GridItemEditorEvent):void {
@@ -58,7 +60,7 @@
         }
 
         private function onExportClick(event:MouseEvent):void {
-            controller.export();
+            controller.exportMVA();
         }
         ]]>
     </fx:Script>

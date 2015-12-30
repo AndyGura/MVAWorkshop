@@ -94,10 +94,6 @@ public class MVAController {
         project.entries.addItem(entry);
     }
 
-    public function removeEntry(id:String):void {
-        removeEntries([id]);
-    }
-
     public function removeEntries(entries:Array):void {
         for each (var id:String in entries) {
             if (!getEntryByID(id)) {
@@ -107,9 +103,22 @@ public class MVAController {
         }
     }
 
-    public function export():void {
+    public function exportMVA():void {
+        var outputDirectory:File;
+        var outputPath:String = MVAProjectVO(project).outputProjectPath;
+        if (outputPath.substr(0, 1) == "/") {
+            //we are using MVAWorkshop on linux under wine;
+            outputPath = 'Z:' + outputPath;
+        }
         try {
-            var outputDirectory:File = new File(MVAProjectVO(project).outputProjectPath);
+            var windowsPartitionPathIndex:Number = Math.max(outputPath.indexOf(':\\'), outputPath.indexOf(':/'));
+            if (windowsPartitionPathIndex==-1) {
+                // we are using relative output path;
+                var targetFile:File = (new File()).resolvePath(project.fileName);
+                outputDirectory = targetFile.parent.resolvePath(outputPath);
+            } else {
+                outputDirectory = new File(outputPath);
+            }
         } catch (e:Error) {
         }
         if (!outputDirectory || !outputDirectory.exists || !outputDirectory.isDirectory) {
@@ -123,7 +132,7 @@ public class MVAController {
         var fs:FileStream = new FileStream();
         for each (var lang:LangVO in project.langs) {
             var mvaData:ByteArray = project.getExportedMVA(lang.code);
-            fs.open(mvaDirectory.resolvePath(lang.code+'.mva'), FileMode.WRITE);
+            fs.open(mvaDirectory.resolvePath(lang.code + '.mva'), FileMode.WRITE);
             fs.writeBytes(mvaData);
             fs.close();
         }
