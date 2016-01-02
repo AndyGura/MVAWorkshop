@@ -1,0 +1,27 @@
+package $$package$$ {
+
+import flash.utils.Dictionary;
+
+import flash.utils.ByteArray;
+
+public class LocaleController {
+
+$$mva_embed_constants$$
+
+    private static var LANG_MVAS:Dictionary = prepareMVASDictionary();
+    private static function prepareMVASDictionary():Dictionary {
+        var output:Dictionary = new Dictionary();
+$$lang_dictionary_initializing$$
+        return output;
+    }
+
+    public static function loadLanguage(language:LangVO):void {
+        var mva:ByteArray = ByteArray(new LANG_MVAS[language]());
+        mva.uncompress();
+        var o:* = mva.readObject();
+        LocaleModel.instance.loadedLanguage = language;
+        LocaleModel.instance.stringResources = o as Dictionary;
+    }
+
+}
+}

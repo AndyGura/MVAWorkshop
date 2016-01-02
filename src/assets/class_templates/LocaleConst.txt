@@ -1,0 +1,7 @@
+package $$package$$ {
+public class LocaleConst {
+
+$$langVO_constants$$
+$$locale_keys_constants$$
+}
+}

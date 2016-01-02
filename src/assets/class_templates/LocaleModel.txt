@@ -1,0 +1,44 @@
+package com.andrewgura.locales {
+
+import flash.events.Event;
+import flash.events.EventDispatcher;
+import flash.utils.Dictionary;
+
+public class LocaleModel extends EventDispatcher {
+
+    public var loadedLanguage:LangVO;
+
+    private var isLoaded:Boolean = false;
+
+    private var _stringResources:Dictionary;
+    public function set stringResources(value:Dictionary):void {
+        if (_stringResources !== value && value) {
+            isLoaded = true;
+            _stringResources = value;
+            dispatchEvent(new Event("stringResourcesChange"));
+        }
+    }
+
+    [Bindable(event="stringResourcesChange")]
+    public function getStr(stringID:String):String {
+        if (!isLoaded) {
+            return "";
+        }
+        return _stringResources[stringID];
+    }
+
+    //=====================================================SINGLETON====================================================
+
+    private static var _instance:LocaleModel;
+    public static function get instance():LocaleModel {
+        if (!_instance) {
+            _instance = new LocaleModel(new SingletonEnforcer());
+        }
+        return _instance;
+    }
+    public function LocaleModel(arg:SingletonEnforcer) {
+        if (!arg) {throw new Error();}
+    }
+}
+}
+class SingletonEnforcer {}

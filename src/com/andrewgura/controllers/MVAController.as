@@ -1,4 +1,5 @@
 package com.andrewgura.controllers {
+import com.andrewgura.helpers.ClassTemplateHelper;
 import com.andrewgura.ui.popup.AppPopups;
 import com.andrewgura.ui.popup.PopupFactory;
 import com.andrewgura.vo.LangVO;
@@ -8,6 +9,7 @@ import flash.events.Event;
 import flash.filesystem.File;
 import flash.filesystem.FileMode;
 import flash.filesystem.FileStream;
+import flash.net.FileReference;
 import flash.utils.ByteArray;
 
 import mx.events.CollectionEvent;
@@ -140,23 +142,16 @@ public class MVAController {
         if (!mvaDirectory.exists) {
             mvaDirectory.createDirectory();
         }
-        var pAckage:String = project.outputClassesPackagePath.replace(/\//gi, '.');
 
-        fs.open(packageDirectory.resolvePath('LocaleConst.as'), FileMode.WRITE);
-        fs.writeUTFBytes(project.getOutputLocaleConstClassText(pAckage));
-        fs.close();
-
-        fs.open(packageDirectory.resolvePath('LocaleController.as'), FileMode.WRITE);
-        fs.writeUTFBytes(project.getOutputLocaleControllerClassText(pAckage));
-        fs.close();
-
-        fs.open(packageDirectory.resolvePath('LocaleModel.as'), FileMode.WRITE);
-        fs.writeUTFBytes(project.getOutputLocaleModelClassText(pAckage));
-        fs.close();
-
-        fs.open(packageDirectory.resolvePath('LangVO.as'), FileMode.WRITE);
-        fs.writeUTFBytes(project.getOutputLangVOClassText(pAckage));
-        fs.close();
+        for each (var className:String in ["LocaleConst", "LocaleController", "LocaleModel", "LangVO"]) {
+            var templateFile:File = File.applicationDirectory.resolvePath('assets/class_templates/'+className+'.txt');
+            fs.open(templateFile, FileMode.READ);
+            var classText:String = fs.readMultiByte(templateFile.size, File.systemCharset);
+            fs.close();
+            fs.open(packageDirectory.resolvePath(className+'.as'), FileMode.WRITE);
+            fs.writeUTFBytes(ClassTemplateHelper.processPlaceHolders(classText, project));
+            fs.close();
+        }
 
         PopupFactory.instance.showPopup(AppPopups.INFO_POPUP, 'Export success!');
     }
