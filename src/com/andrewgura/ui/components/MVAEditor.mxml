@@ -44,7 +44,7 @@
             project.isChangesSaved = false;
             if (event.column.dataField == "string") {
                 var stringId:String = MVAProjectVO(project).entries.getItemAt(event.rowIndex).string;
-                stringId = stringId.replace(/ /gi, '_');
+                stringId = stringId.replace(/[ \.]/gi, '_');
                 stringId = stringId.replace(/[^A-Za-z0-9_]/gi, '');
                 stringId = stringId.toUpperCase();
                 //check duplicate
