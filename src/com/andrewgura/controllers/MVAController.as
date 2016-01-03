@@ -9,7 +9,6 @@ import flash.events.Event;
 import flash.filesystem.File;
 import flash.filesystem.FileMode;
 import flash.filesystem.FileStream;
-import flash.net.FileReference;
 import flash.utils.ByteArray;
 
 import mx.events.CollectionEvent;
@@ -83,17 +82,24 @@ public class MVAController {
     }
 
     public function addEntry():void {
-        var nameOfEntry:String = 'NEW_ENTRY';
-        var i:Number = 0;
-        while (getEntryByID(nameOfEntry) != null) {
-            i++;
-            nameOfEntry = 'NEW_ENTRY_' + i;
-        }
+        var nameOfEntry:String = getNewNameForDuplicate('NEW_ENTRY');
         var entry:Object = {string: nameOfEntry};
         for each (var lang:LangVO in project.langs) {
             entry[lang.code] = '';
         }
         project.entries.addItem(entry);
+    }
+
+    public function getNewNameForDuplicate(id:String, excludeIndex:Number = -1):String {
+        var nameOfEntry:String = id;
+        var i:Number = 0;
+        var foundEntry:* = getEntryByID(nameOfEntry);
+        while (foundEntry != null && project.entries.getItemIndex(foundEntry) != excludeIndex) {
+            i++;
+            nameOfEntry = id + '_' + i;
+            foundEntry = getEntryByID(nameOfEntry);
+        }
+        return nameOfEntry;
     }
 
     public function removeEntries(entries:Array):void {
@@ -114,7 +120,7 @@ public class MVAController {
         }
         try {
             var windowsPartitionPathIndex:Number = Math.max(outputPath.indexOf(':\\'), outputPath.indexOf(':/'));
-            if (windowsPartitionPathIndex==-1) {
+            if (windowsPartitionPathIndex == -1) {
                 // we are using relative output path;
                 var targetFile:File = (new File()).resolvePath(project.fileName);
                 outputDirectory = targetFile.parent.resolvePath(outputPath);
@@ -144,11 +150,11 @@ public class MVAController {
         }
 
         for each (var className:String in ["LocaleConst", "LocaleController", "LocaleModel", "LangVO"]) {
-            var templateFile:File = File.applicationDirectory.resolvePath('assets/class_templates/'+className+'.txt');
+            var templateFile:File = File.applicationDirectory.resolvePath('assets/class_templates/' + className + '.txt');
             fs.open(templateFile, FileMode.READ);
             var classText:String = fs.readMultiByte(templateFile.size, File.systemCharset);
             fs.close();
-            fs.open(packageDirectory.resolvePath(className+'.as'), FileMode.WRITE);
+            fs.open(packageDirectory.resolvePath(className + '.as'), FileMode.WRITE);
             fs.writeUTFBytes(ClassTemplateHelper.processPlaceHolders(classText, project));
             fs.close();
         }

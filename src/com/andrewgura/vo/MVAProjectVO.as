@@ -24,7 +24,6 @@ public class MVAProjectVO extends ProjectVO {
         var gridColumn:GridColumn = new GridColumn();
         gridColumn.dataField = 'string';
         gridColumn.headerText = 'String ID';
-        gridColumn.editable = false;
         output.push(gridColumn);
         for each (var lang:LangVO in langs) {
             gridColumn = new GridColumn();
