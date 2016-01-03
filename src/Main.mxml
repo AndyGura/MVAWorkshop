@@ -5,22 +5,21 @@
                        preinitialize="onPreinitialize(event)">
 
     <fx:Script><![CDATA[
-        import com.andrewgura.models.WorkshopConfig;
         import com.andrewgura.ui.components.MVAEditor;
         import com.andrewgura.ui.components.MVASettingsPanel;
-        import com.andrewgura.ui.components.SettingsPanel;
         import com.andrewgura.vo.FileTypeVO;
         import com.andrewgura.vo.MVAProjectVO;
+        import com.andrewgura.vo.WorkshopConfigVO;
 
         [Bindable]
-        public var config:WorkshopConfig;
+        public var config:WorkshopConfigVO;
 
         private function onPreinitialize(event:Event):void {
-            config = new WorkshopConfig();
+            config = new WorkshopConfigVO();
             config.editorClass = MVAEditor;
             config.projectClass = MVAProjectVO;
             config.settingsPanelClass = MVASettingsPanel;
-            config.projectFileType = new FileTypeVO('mvp', 'MVAWorkshop project file');
+            config.projectFileType = new FileTypeVO('MVAWorkshop project file', 'mvp');
         }
         ]]>
     </fx:Script>
