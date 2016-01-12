@@ -17,9 +17,9 @@
         private function onPreinitialize(event:Event):void {
             config = new WorkshopConfigVO();
             config.editorClass = MVAEditor;
-            config.projectClass = MVAProjectVO;
-            config.settingsPanelClass = MVASettingsPanel;
-            config.projectFileType = new FileTypeVO('MVAWorkshop project file', 'mvp');
+            config.projectClasses = [MVAProjectVO];
+            config.settingsPanelClasses = [MVASettingsPanel];
+            config.projectFileTypes = [new FileTypeVO('MVAWorkshop project file', 'mvp')];
         }
         ]]>
     </fx:Script>
