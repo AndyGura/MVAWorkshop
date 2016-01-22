@@ -18,7 +18,7 @@
             config = new WorkshopConfigVO();
             config.editorClass = MVAEditor;
             config.projectClass = MVAProjectVO;
-            config.settingsPanelClass = MVASettingsPanel;
+            config.projectSettingsPanelClass = MVASettingsPanel;
             config.projectFileType = new FileTypeVO('MVAWorkshop project file', 'mvp');
         }
         ]]>
