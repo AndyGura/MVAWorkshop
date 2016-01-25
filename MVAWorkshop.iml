@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="MVAWorkshop">
     <configurations>
-      <configuration name="MVAWorkshop" target-platform="Desktop" main-class="Main" output-file="MVAWorkshop.swf" output-folder="$MODULE_DIR$/out/production/MVAWorkshop">
+      <configuration name="MVAWorkshop" target-platform="Desktop" main-class="Main" output-file="MVAWorkshop.swf" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.9">
           <entries>
             <entry module-name="WorkshopAPI" build-configuration-name="WorkshopAPI">
