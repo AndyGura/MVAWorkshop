@@ -19,7 +19,9 @@ public class MVAController {
 
     public function MVAController(project:MVAProjectVO) {
         this.project = project;
-        this.project.entries.addEventListener(CollectionEvent.COLLECTION_CHANGE, onEntriesChange);
+        if (project) {
+            this.project.entries.addEventListener(CollectionEvent.COLLECTION_CHANGE, onEntriesChange);
+        }
     }
 
     public function onEntriesChange(event:CollectionEvent):void {

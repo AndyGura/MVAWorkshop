@@ -1,4 +1,4 @@
-package com.andrewgura.locales {
+package $$package$$ {
 
 import flash.events.Event;
 import flash.events.EventDispatcher;
