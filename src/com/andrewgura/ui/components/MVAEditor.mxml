@@ -7,40 +7,23 @@
         import com.andrewgura.controllers.MVAController;
         import com.andrewgura.ui.popup.AppPopups;
         import com.andrewgura.ui.popup.PopupFactory;
-        import com.andrewgura.vo.LangVO;
         import com.andrewgura.vo.MVAProjectVO;
         import com.andrewgura.vo.ProjectVO;
 
         import spark.events.GridItemEditorEvent;
 
+        [Bindable]
         private var controller:MVAController;
+
+        [Bindable]
+        public var isLeftPanelVisible:Boolean = true;
 
         override public function set project(value:ProjectVO):void {
             super.project = value;
             controller = new MVAController(MVAProjectVO(project));
         }
 
-        private function onAddLanguageButtonClick(event:MouseEvent):void {
-            controller.addLanguage(new LangVO('en_US', 'US English'));
-            languagesList.selectedIndex = MVAProjectVO(project).langs.length - 1;
-        }
-
-        private function onDeleteLanguageButtonClick(event:MouseEvent):void {
-            PopupFactory.instance.showPopup(AppPopups.CONFIRM_POPUP, 'Are you sure to delete language? Data will be deleted!', true, null, onOkClick);
-            function onOkClick(event:Event):void {
-                controller.removeLanguage(LangVO(languagesList.selectedItem));
-            }
-        }
-
-        private function onChangeLanguage(event:DataEvent):void {
-            if (!languagesList.selectedItem) {
-                return;
-            }
-            controller.changeLanguage(languagesList.selectedItem.code, JSON.parse(event.data));
-            languagesList.selectedIndex = -1;
-        }
-
-        private function dataGrid1_gridItemEditorSessionSaveHandler(event:GridItemEditorEvent):void {
+        private function onGridItemSave(event:GridItemEditorEvent):void {
             project.isChangesSaved = false;
             if (event.column.dataField == "string") {
                 var stringId:String = MVAProjectVO(project).entries.getItemAt(event.rowIndex).string;
@@ -74,53 +57,42 @@
         ]]>
     </fx:Script>
 
-    <s:HGroup width="100%" height="100%"
+    <s:VGroup width="100%" height="100%"
               visible="{project}">
 
-        <s:VGroup width="300" height="100%"
-                  paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
-            <s:Label text="Supported languages:"/>
-            <s:List id="languagesList"
-                    width="100%" height="100"
-                    dataProvider="{MVAProjectVO(project).langs}" labelField="name"/>
-            <s:HGroup>
-                <s:Button label="Add" click="onAddLanguageButtonClick(event)"/>
-                <s:Button label="Delete" click="onDeleteLanguageButtonClick(event)"
-                          enabled="{languagesList.selectedIndex>-1}"/>
-            </s:HGroup>
+        <s:HGroup id="buttonsHGroup" width="100%"
+                  verticalAlign="middle">
+            <s:Button id="settingsButton"
+                      click="{isLeftPanelVisible = !isLeftPanelVisible}"
+                      skinClass="com.andrewgura.ui.skins.LeftPanelButtonSkin"/>
+            <s:Spacer width="{leftPanel.width - settingsButton.width - buttonsHGroup.gap}"
+                      includeInLayout="{isLeftPanelVisible}"/>
+            <s:Button label="Add" click="onAddEntryClick(event)"/>
+            <s:Button label="Delete" click="onDeleteEntryClick(event)"
+                      enabled="{dataGrid.selectedItem}"/>
+            <s:Spacer width="100%"/>
+            <s:Button label="EXPORT TO PROJECT" click="onExportClick(event)"/>
+        </s:HGroup>
 
-            <s:Spacer height="50"/>
+        <s:HGroup width="100%" height="100%">
 
-            <components:LanguageEditor width="100%"
-                                       visible="{languagesList.selectedItem}"
-                                       includeInLayout="{languagesList.selectedItem}"
-                                       lang="{languagesList.selectedItem}"
-                                       saveLanguage="onChangeLanguage(event)"/>
+            <components:MVALeftPanel id="leftPanel"
+                                     height="100%" includeInLayout="{isLeftPanelVisible}"
+                                     project="{MVAProjectVO(project)}" controller="{controller}"/>
 
-            <s:Spacer height="100%"/>
-
-            <s:Button width="100%" label="EXPORT TO PROJECT" click="onExportClick(event)"/>
-
-        </s:VGroup>
-
-        <s:VGroup width="100%" height="100%">
-
-            <s:HGroup>
-                <s:Button label="Add" click="onAddEntryClick(event)"/>
-                <s:Button label="Delete" click="onDeleteEntryClick(event)"
-                          enabled="{dataGrid.selectedItem}"/>
-            </s:HGroup>
             <s:DataGrid id="dataGrid"
                         width="100%" height="100%"
+                        left="{isLeftPanelVisible ? leftPanel.width : 0}"
                         selectionMode="multipleRows"
                         editable="true" sortableColumns="false"
                         dataProvider="{MVAProjectVO(project).entries}"
                         columns="{MVAProjectVO(project).dataGridColumnsProvider}"
-                        gridItemEditorSessionSave="dataGrid1_gridItemEditorSessionSaveHandler(event)"/>
-        </s:VGroup>
+                        gridItemEditorSessionSave="onGridItemSave(event)"/>
 
+        </s:HGroup>
 
-    </s:HGroup>
+    </s:VGroup>
+
 
     <s:Label text="Welcome to MVAWorkshop.{'\n'}Create new project or open an existing one"
              horizontalCenter="0" verticalCenter="0"
