@@ -7,8 +7,12 @@
         import com.andrewgura.controllers.MVAController;
         import com.andrewgura.ui.popup.AppPopups;
         import com.andrewgura.ui.popup.PopupFactory;
+        import com.andrewgura.vo.LangVO;
         import com.andrewgura.vo.MVAProjectVO;
         import com.andrewgura.vo.ProjectVO;
+
+        import mx.collections.ArrayCollection;
+        import mx.events.CollectionEvent;
 
         import spark.events.GridItemEditorEvent;
 
@@ -17,6 +21,9 @@
 
         [Bindable]
         public var isLeftPanelVisible:Boolean = true;
+
+        [Bindable]
+        public var gridDataProvider:ArrayCollection;
 
         override public function set project(value:ProjectVO):void {
             super.project = value;
@@ -54,8 +61,38 @@
         private function onExportClick(event:MouseEvent):void {
             controller.exportMVA();
         }
+
+        private function updateArrayCollection(...bindings):* {
+            MVAProjectVO(project).entries.addEventListener(CollectionEvent.COLLECTION_CHANGE, updateArrayCollection);
+            if (!findToggleButton.selected || findTextInput.text.length == 0) {
+                gridDataProvider = MVAProjectVO(project).entries;
+            } else {
+                var fields:Array = ['string'];
+                for each (var lang:LangVO in MVAProjectVO(project).langs) {
+                    fields.push(lang.code);
+                }
+                gridDataProvider = new ArrayCollection();
+                outerloop:
+                        for each (var entry:Object in MVAProjectVO(project).entries) {
+                            for each (var field:String in fields) {
+                                if (entry[field].toLowerCase().indexOf(findTextInput.text.toLowerCase()) > -1) {
+                                    gridDataProvider.addItem(entry);
+                                    continue outerloop;
+                                }
+                            }
+                        }
+            }
+            return null;
+        }
         ]]>
     </fx:Script>
+
+    <fx:Declarations>
+        <fx:Object>
+            {updateArrayCollection(project, MVAProjectVO(project).entries, findToggleButton.selected,
+            findTextInput.text)}
+        </fx:Object>
+    </fx:Declarations>
 
     <s:VGroup width="100%" height="100%"
               visible="{project}">
@@ -70,24 +107,32 @@
             <s:Button label="Add" click="onAddEntryClick(event)"/>
             <s:Button label="Delete" click="onDeleteEntryClick(event)"
                       enabled="{dataGrid.selectedItem}"/>
+            <s:ToggleButton id="findToggleButton" label="Find"/>
             <s:Spacer width="100%"/>
             <s:Button label="EXPORT TO PROJECT" click="onExportClick(event)"/>
         </s:HGroup>
 
         <s:HGroup width="100%" height="100%">
 
-            <components:MVALeftPanel id="leftPanel"
-                                     height="100%" includeInLayout="{isLeftPanelVisible}"
+            <components:MVALeftPanel id="leftPanel" height="100%"
+                                     includeInLayout="{isLeftPanelVisible}" visible="{isLeftPanelVisible}"
                                      project="{MVAProjectVO(project)}" controller="{controller}"/>
 
-            <s:DataGrid id="dataGrid"
-                        width="100%" height="100%"
-                        left="{isLeftPanelVisible ? leftPanel.width : 0}"
-                        selectionMode="multipleRows"
-                        editable="true" sortableColumns="false"
-                        dataProvider="{MVAProjectVO(project).entries}"
-                        columns="{MVAProjectVO(project).dataGridColumnsProvider}"
-                        gridItemEditorSessionSave="onGridItemSave(event)"/>
+            <s:VGroup width="100%" height="100%"
+                      left="{isLeftPanelVisible ? leftPanel.width : 0}">
+                <s:HGroup width="100%" verticalAlign="middle"
+                          visible="{findToggleButton.selected}" includeInLayout="{findToggleButton.selected}">
+                    <s:Label text="Find text:"/>
+                    <s:TextInput id="findTextInput" width="100%"/>
+                </s:HGroup>
+                <s:DataGrid id="dataGrid"
+                            width="100%" height="100%"
+                            selectionMode="multipleRows"
+                            editable="true" sortableColumns="false"
+                            dataProvider="{gridDataProvider}"
+                            columns="{MVAProjectVO(project).dataGridColumnsProvider}"
+                            gridItemEditorSessionSave="onGridItemSave(event)"/>
+            </s:VGroup>
 
         </s:HGroup>
 
